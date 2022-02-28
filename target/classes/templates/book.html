@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Book view</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+    <div id="scripted">
+        <h1 id="idField">AddressBook </h1>
+        <h1 id="nameField">Name: </h1>
+        <h2>Buddies:</h2>
+        <ul id="buddyList"></ul>
+        <h2>Add a buddy:</h2>
+        <form id="buddyForm">
+            <p>Name: <input type="text" id="buddyName" /></p>
+            <p>Address: <input type="text" id="buddyAddress"/></p>
+            <p>Phone Number: <input type="text"  id="buddyNum"/></p>
+            <p><input type="submit" value="Submit" /> </p>
+        </form>
+    </div>
+    <script>
+        const id = window.location.href.split("/")[4]
+        $.ajax({
+            url : `/books/${id}`,
+            type : "GET",
+            async : true,
+            contentType : "application/json"
+        }).done( function (data) {
+            document.getElementById("idField").innerText += " " + data.id
+            document.getElementById("nameField").innerText += " " + data.name
+
+            for (const buddy of data.buddyInfos) {
+                const innerHtml = "<li>" + buddy.name + "," + buddy.address + ","
+                    + buddy.phoneNumber + "</li>"
+                document.getElementById("buddyList").innerHTML += innerHtml
+            }
+        })
+
+        $("#buddyForm").submit(function(event) {
+            const name = document.getElementById("buddyName").value;
+            const address = document.getElementById("buddyAddress").value;
+            const phoneNumber = document.getElementById("buddyNum").value;
+
+            $.ajax({
+                url : `/books/buddy/${id}`,
+                type : "POST",
+                async : true,
+                data : JSON.stringify({name, address, phoneNumber}),
+                contentType : "application/json"
+            }).done( function () {
+                alert("Buddy added: " + name);
+            })
+        })
+    </script>
+    <noscript>
+        <style type="text/css">
+             #scripted { display:none; }
+        </style>
+        <h1 th:text="'AddressBook' + ${id}"/>
+        <h1 th:text="'Name: ' + ${name}"/>
+        <h2>Buddies:</h2>
+        <p th:text="${buddies}"/>
+        <h2>Add a buddy:</h2>
+        <form th:action="@{/book/} + ${id}" th:object="${buddyInfo}" method="post">
+            <p>Name: <input type="text" th:field="*{name}" /></p>
+            <p>Address: <input type="text" th:field="*{address}" /></p>
+            <p>Phone Number: <input type="text" th:field="*{phoneNumber}" /></p>
+            <p><input type="submit" value="Submit" /> </p>
+        </form>
+    </noscript>
+    <a href="/">
+        <button>Return </button>
+    </a>
+</body>
+</html>
