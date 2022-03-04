@@ -8,10 +8,10 @@
 <body>
     <div id="scripted">
         <h1 id="idField">AddressBook </h1>
-        <h1 id="nameField">Name: </h1>
-        <h2>Buddies:</h2>
+        <h2 id="nameField">Name: </h2>
+        <h3>Buddies:</h3>
         <ul id="buddyList"></ul>
-        <h2>Add a buddy:</h2>
+        <h3>Add a buddy:</h3>
         <form id="buddyForm">
             <p>Name: <input type="text" id="buddyName" /></p>
             <p>Address: <input type="text" id="buddyAddress"/></p>
@@ -58,10 +58,10 @@
              #scripted { display:none; }
         </style>
         <h1 th:text="'AddressBook' + ${id}"/>
-        <h1 th:text="'Name: ' + ${name}"/>
-        <h2>Buddies:</h2>
+        <h2 th:text="'Name: ' + ${name}"/>
+        <h3>Buddies:</h3>
         <p th:text="${buddies}"/>
-        <h2>Add a buddy:</h2>
+        <h3>Add a buddy:</h3>
         <form th:action="@{/book/} + ${id}" th:object="${buddyInfo}" method="post">
             <p>Name: <input type="text" th:field="*{name}" /></p>
             <p>Address: <input type="text" th:field="*{address}" /></p>
